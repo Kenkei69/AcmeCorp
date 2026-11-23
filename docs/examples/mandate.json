@@ -1,0 +1,87 @@
+{
+  "_metadata": {
+    "description": "Standard EIP-712 Unsigned Mandate Test Fixture — Project 10 (Phase 0)",
+    "scenario": "3 recurring billing periods of 5 DEMO tokens every 120 seconds",
+    "tokenSymbol": "DEMO",
+    "tokenDecimals": 18,
+    "chargeAmountTokens": "5",
+    "chargeAmountBaseUnits": "5000000000000000000",
+    "maxChargesCount": 3,
+    "totalAllowanceCapTokens": "15",
+    "totalAllowanceCapBaseUnits": "15000000000000000000",
+    "merchantName": "AcmeCorp",
+    "payoutAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "payoutAddressNote": "In SmartMandate.sol, the 'merchant' address serves as the payout destination receiving token transfers."
+  },
+  "domain": {
+    "name": "SmartMandateBilling",
+    "version": "1",
+    "chainId": 31337,
+    "verifyingContract": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+  },
+  "types": {
+    "Mandate": [
+      { "name": "subscriber", "type": "address" },
+      { "name": "merchant", "type": "address" },
+      { "name": "token", "type": "address" },
+      { "name": "amount", "type": "uint256" },
+      { "name": "interval", "type": "uint256" },
+      { "name": "firstDueTime", "type": "uint256" },
+      { "name": "maxCharges", "type": "uint256" },
+      { "name": "expiry", "type": "uint256" },
+      { "name": "nonce", "type": "uint256" },
+      { "name": "signingDeadline", "type": "uint256" }
+    ]
+  },
+  "primaryType": "Mandate",
+  "message": {
+    "subscriber": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "merchant": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "amount": "5000000000000000000",
+    "interval": "120",
+    "firstDueTime": "1800000000",
+    "maxCharges": "3",
+    "expiry": "1800001000",
+    "nonce": "1",
+    "signingDeadline": "1800000000"
+  },
+  "allowance": {
+    "_comment": "Upfront capped ERC-20 approval required prior to calling registerMandate on-chain.",
+    "spender": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    "tokenAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "allowanceAmount": "15000000000000000000",
+    "allowanceFormatted": "15 DEMO"
+  },
+  "testSchedule": {
+    "registration": {
+      "registerAt": 1799999990,
+      "description": "Block timestamp when subscriber approves allowance and registers mandate (must be <= signingDeadline and <= expiry)."
+    },
+    "period0": {
+      "periodIndex": 0,
+      "dueTime": 1800000000,
+      "windowEnd": 1800000120,
+      "windowInterval": "[1800000000, 1800000120)",
+      "chargeAmount": "5000000000000000000"
+    },
+    "period1": {
+      "periodIndex": 1,
+      "dueTime": 1800000120,
+      "windowEnd": 1800000240,
+      "windowInterval": "[1800000120, 1800000240)",
+      "chargeAmount": "5000000000000000000"
+    },
+    "period2": {
+      "periodIndex": 2,
+      "dueTime": 1800000240,
+      "windowEnd": 1800000360,
+      "windowInterval": "[1800000240, 1800000360)",
+      "chargeAmount": "5000000000000000000"
+    },
+    "mandateExpiry": {
+      "expiry": 1800001000,
+      "description": "Timestamp after which no charge can be submitted even if inside a period window."
+    }
+  }
+}

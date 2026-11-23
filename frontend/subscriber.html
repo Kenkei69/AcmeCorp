@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Subscriber Portal — Manage Smart Mandates</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-inner: #1b253d;
+      --border: #263352;
+      --primary: #3b82f6;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 520px; }
+
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .brand-title { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.4); margin-bottom: 16px; }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .status-revoked { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .status-completed { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .status-unregistered { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
+
+    .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    input[type="text"] { flex: 1; background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 13px; font-family: monospace; outline: none; }
+    input[type="text"]:focus { border-color: var(--primary); }
+
+    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; transition: all 0.2s; }
+    .btn-search { padding: 12px 18px; background: var(--primary); color: #fff; flex-shrink: 0; }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4); margin-top: 14px; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+    .btn-secondary { background: var(--card-inner); color: #fff; border: 1px solid var(--border); margin-top: 10px; }
+
+    .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+    .detail-row:last-child { border-bottom: none; }
+    .label { color: var(--text-muted); }
+    .val { font-weight: 600; color: #fff; text-align: right; }
+    .val.mono { font-family: monospace; font-size: 12px; color: #93c5fd; }
+
+    .cycles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+    .cycle-card { background: var(--card-inner); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--border); font-size: 12px; }
+    .cycle-card.settled { border-color: rgba(16, 185, 129, 0.5); background: rgba(16, 185, 129, 0.08); }
+    .cycle-status { font-weight: 700; margin-top: 4px; font-size: 11px; }
+
+    .banner { padding: 12px 14px; border-radius: 12px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .banner-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .banner-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand-title">🛡️ Subscriber Mandate Portal</div>
+      <a href="/" style="color: var(--primary); text-decoration: none; font-size: 13px;">← Merchant QR</a>
+    </header>
+
+    <div class="banner banner-danger" id="errorBanner"></div>
+    <div class="banner banner-success" id="successBanner"></div>
+
+    <!-- Lookup Box -->
+    <div class="card">
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+        Lookup Active Mandate by ID (or auto-detected from session):
+      </div>
+      <div class="input-group">
+        <input type="text" id="mandateIdInput" placeholder="0x... (32-byte Mandate ID)">
+        <button class="btn btn-search" onclick="fetchMandate()">Inspect</button>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 12px; color: var(--text-muted);">Connected Wallet:</span>
+        <span class="val mono" id="connectedWalletDisplay" style="font-size: 12px;">Not Connected</span>
+      </div>
+      <button class="btn btn-secondary" id="connectWalletBtn" onclick="connectWallet()" style="padding: 10px; font-size: 13px;">
+        👛 Connect Subscriber Wallet
+      </button>
+    </div>
+
+    <!-- Mandate Details Display Card -->
+    <div class="card" id="detailsCard" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 16px; font-weight: 700;">Mandate Details</h3>
+        <span class="status-badge" id="statusBadge">Checking...</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Mandate ID</span>
+        <span class="val mono" id="mandateIdDisplay" style="font-size: 11px;">0x...</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Subscriber</span>
+        <span class="val mono" id="subscriberDisplay">0x...</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Merchant Payout</span>
+        <span class="val mono" id="merchantDisplay">0x...</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Terms</span>
+        <span class="val" id="termsDisplay">5 DEMO every 120s (max 3)</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Allowance Cap</span>
+        <span class="val" style="color: #34d399;">15 DEMO</span>
+      </div>
+
+      <!-- Billing Cycles Settlement Status -->
+      <div style="margin-top: 16px;">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Billing Period Statuses:</div>
+        <div class="cycles-grid">
+          <div class="cycle-card" id="cycleCard0">
+            <div>Period 0</div>
+            <div class="cycle-status" id="cycleStatus0">Pending</div>
+          </div>
+          <div class="cycle-card" id="cycleCard1">
+            <div>Period 1</div>
+            <div class="cycle-status" id="cycleStatus1">Pending</div>
+          </div>
+          <div class="cycle-card" id="cycleCard2">
+            <div>Period 2</div>
+            <div class="cycle-status" id="cycleStatus2">Pending</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revocation Action -->
+      <div id="revocationActionArea" style="margin-top: 18px;">
+        <button class="btn btn-danger" id="revokeBtn" onclick="revokeMandate()">
+          🚫 Revoke Mandate On-Chain
+        </button>
+        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">
+          Revoking cancels all future pull charges immediately upon on-chain confirmation.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+  <script>
+    let contractsConfig = null;
+    let provider = null;
+    let signer = null;
+    let userAddress = null;
+    let currentMandateId = null;
+
+    async function init() {
+      try {
+        const res = await fetch('/api/contracts');
+        contractsConfig = await res.json();
+
+        // Check if query param ?mandateId=... is provided or in local storage
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramId = urlParams.get('mandateId') || localStorage.getItem('lastActiveMandateId');
+        if (paramId) {
+          document.getElementById('mandateIdInput').value = paramId;
+          fetchMandate();
+        }
+
+        if (window.ethereum) {
+          provider = new ethers.BrowserProvider(window.ethereum);
+          const accounts = await provider.listAccounts();
+          if (accounts.length > 0) {
+            connectWallet();
+          }
+        }
+      } catch (e) {
+        console.error("Init error:", e);
+      }
+    }
+
+    async function connectWallet() {
+      hideMessages();
+      if (!window.ethereum) {
+        showError("No Web3 wallet found. Please use a Web3 browser or extension.");
+        return;
+      }
+      try {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        document.getElementById('connectedWalletDisplay').innerText =
+          userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+        document.getElementById('connectWalletBtn').style.display = 'none';
+
+        if (currentMandateId) fetchMandate();
+      } catch (err) {
+        showError("Wallet connection failed: " + err.message);
+      }
+    }
+
+    async function fetchMandate() {
+      hideMessages();
+      const inputId = document.getElementById('mandateIdInput').value.trim();
+      if (!inputId || !inputId.startsWith('0x') || inputId.length !== 66) {
+        showError("Please enter a valid 32-byte Mandate ID (0x + 64 hex characters).");
+        return;
+      }
+
+      currentMandateId = inputId;
+      document.getElementById('detailsCard').style.display = 'block';
+
+      try {
+        const smartMandateAddr = contractsConfig.contracts.SmartMandate.address;
+        const readProvider = provider || new ethers.JsonRpcProvider(contractsConfig.network.rpcUrl);
+        const contract = new ethers.Contract(smartMandateAddr, contractsConfig.contracts.SmartMandate.abi, readProvider);
+
+        // Fetch Mandate struct and state
+        const [stateNum, mandateStruct] = await Promise.all([
+          contract.mandateState(currentMandateId),
+          contract.getMandate(currentMandateId)
+        ]);
+
+        renderMandate(currentMandateId, Number(stateNum), mandateStruct);
+
+        // Fetch settlement status for 3 periods
+        for (let i = 0; i < 3; i++) {
+          const settled = await contract.isSettled(currentMandateId, i);
+          const card = document.getElementById(`cycleCard${i}`);
+          const status = document.getElementById(`cycleStatus${i}`);
+          if (settled) {
+            card.className = "cycle-card settled";
+            status.innerText = "SETTLED ✅";
+            status.style.color = "#34d399";
+          } else {
+            card.className = "cycle-card";
+            status.innerText = "Pending";
+            status.style.color = "#94a3b8";
+          }
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        showError("Failed to fetch mandate from contract: " + (err.message || err));
+      }
+    }
+
+    function renderMandate(id, state, m) {
+      document.getElementById('mandateIdDisplay').innerText = id;
+      document.getElementById('subscriberDisplay').innerText = m.subscriber;
+      document.getElementById('merchantDisplay').innerText = m.merchant;
+
+      const badge = document.getElementById('statusBadge');
+      const revokeBtn = document.getElementById('revokeBtn');
+
+      // State enum: 0: UNREGISTERED, 1: ACTIVE, 2: REVOKED, 3: COMPLETED
+      if (state === 1) {
+        badge.className = "status-badge status-active";
+        badge.innerText = "● ACTIVE";
+        revokeBtn.disabled = false;
+        revokeBtn.innerText = "🚫 Revoke Mandate On-Chain";
+      } else if (state === 2) {
+        badge.className = "status-badge status-revoked";
+        badge.innerText = "● REVOKED";
+        revokeBtn.disabled = true;
+        revokeBtn.innerText = "Mandate is Already Revoked";
+      } else if (state === 3) {
+        badge.className = "status-badge status-completed";
+        badge.innerText = "● COMPLETED";
+        revokeBtn.disabled = true;
+        revokeBtn.innerText = "All Cycles Completed";
+      } else {
+        badge.className = "status-badge status-unregistered";
+        badge.innerText = "● UNREGISTERED";
+        revokeBtn.disabled = true;
+      }
+
+      // Check if connected wallet is the subscriber
+      if (userAddress && userAddress.toLowerCase() !== m.subscriber.toLowerCase() && state === 1) {
+        revokeBtn.disabled = true;
+        revokeBtn.innerText = "Only Subscriber Can Revoke";
+      }
+    }
+
+    async function revokeMandate() {
+      hideMessages();
+      if (!signer) {
+        await connectWallet();
+        if (!signer) return;
+      }
+
+      const btn = document.getElementById('revokeBtn');
+      btn.disabled = true;
+      btn.innerText = "⏳ Requesting Revocation in Wallet...";
+
+      try {
+        const smartMandateAddr = contractsConfig.contracts.SmartMandate.address;
+        const contract = new ethers.Contract(smartMandateAddr, contractsConfig.contracts.SmartMandate.abi, signer);
+
+        const tx = await contract.revokeMandate(currentMandateId);
+        btn.innerText = "⏳ Confirming on-chain...";
+        const receipt = await tx.wait();
+
+        // Verify MandateRevoked event
+        const events = receipt.logs
+          .map(l => { try { return contract.interface.parseLog(l); } catch { return null; } })
+          .filter(e => e && e.name === "MandateRevoked");
+
+        if (events.length > 0) {
+          showSuccess("Mandate successfully revoked on-chain! Future charges are now blocked.");
+          await fetchMandate();
+        } else {
+          showSuccess("Revocation transaction confirmed.");
+          await fetchMandate();
+        }
+      } catch (err) {
+        console.error("Revocation error:", err);
+        btn.disabled = false;
+        btn.innerText = "🚫 Retry Revoke Mandate";
+        if (err.code === 4001) {
+          showError("Revocation transaction was rejected in wallet.");
+        } else {
+          showError("Revocation failed: " + (err.message || err));
+        }
+      }
+    }
+
+    function showError(msg) {
+      const b = document.getElementById('errorBanner');
+      b.innerText = msg;
+      b.style.display = 'block';
+    }
+
+    function showSuccess(msg) {
+      const b = document.getElementById('successBanner');
+      b.innerText = msg;
+      b.style.display = 'block';
+    }
+
+    function hideMessages() {
+      document.getElementById('errorBanner').style.display = 'none';
+      document.getElementById('successBanner').style.display = 'none';
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules/
+.appdata/
+.localappdata/
+artifacts/
+cache/
+data/
+.env
+*.tmp*

@@ -1,0 +1,23 @@
+{
+  "name": "project-10-smart-mandates",
+  "version": "1.0.0",
+  "description": "Automated Subscription & Recurring Billing via Smart Mandates — FinTech Capstone",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node node_modules/hardhat/internal/cli/bootstrap.js test",
+    "hardhat": "node node_modules/hardhat/internal/cli/bootstrap.js",
+    "compile": "node node_modules/hardhat/internal/cli/bootstrap.js compile",
+    "test:local": "node node_modules/hardhat/internal/cli/bootstrap.js test",
+    "deploy:local": "node node_modules/hardhat/internal/cli/bootstrap.js run scripts/deploy.js --network localhost",
+    "start": "node backend/server.js",
+    "node:local": "node node_modules/hardhat/internal/cli/bootstrap.js node --hostname 0.0.0.0 --port 8545"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.3.0",
+    "hardhat": "^2.24.0"
+  },
+  "dependencies": {
+    "@nomicfoundation/edr": "^0.26.0"
+  }
+}
