@@ -12,7 +12,14 @@ const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
-const { createCheckoutSession, loadContractsConfig } = require("../frontend/qr/generateLink.js");
+const {
+  createCheckoutSession,
+  loadContractsConfig,
+  isValidPayoutAddress,
+  isLoopbackUrl,
+  getCheckoutBaseUrl,
+  buildCheckoutUrl,
+} = require("../frontend/qr/generateLink.js");
 const BillingStore = require("./store/billingStore");
 const ChargeWorker = require("./chargeWorker");
 const BankAdapter = require("./adapters/bankAdapter");
@@ -86,8 +93,8 @@ function getWorker() {
     const config = loadContractsConfig();
     const rpcUrl = config.network.rpcUrl || "http://127.0.0.1:8545";
     const provider = new ethers.JsonRpcProvider(rpcUrl);
-    // Use Hardhat account #3 (0x90F79bf6EB2c4f870365E785982E1f101E93b906) as dedicated keeper
-    const keeperPrivateKey = "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6";
+    // Use dedicated keeper private key from environment or fallback to Hardhat account #3
+    const keeperPrivateKey = process.env.KEEPER_PRIVATE_KEY || "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6";
     const signer = new ethers.Wallet(keeperPrivateKey, provider);
 
     const smartMandate = new ethers.Contract(
@@ -171,10 +178,22 @@ const server = http.createServer(async (req, res) => {
   try {
     // 1. API: Create New Checkout Session
     if (pathname === "/api/checkout/new" && method === "POST") {
-      const session = createCheckoutSession();
-      activeSessions.set(session.requestId, session);
-      console.log(`[API] Created session ${session.requestId} (expires in 15 mins)`);
-      sendJson(res, 200, session);
+      try {
+        const session = createCheckoutSession();
+        activeSessions.set(session.requestId, session);
+        console.log(`[API] Created session ${session.requestId} (expires in 15 mins)`);
+        sendJson(res, 200, session);
+      } catch (err) {
+        console.error("Failed to create checkout session:", err.message);
+        if (err.code === "INVALID_MERCHANT_ADDRESS") {
+          sendJson(res, 400, {
+            error: "Merchant payout address is missing or invalid (cannot be zero address). Set MERCHANT_ADDRESS in .env.",
+            code: "INVALID_MERCHANT_ADDRESS",
+          });
+          return;
+        }
+        sendJson(res, 500, { error: err.message });
+      }
       return;
     }
 
@@ -233,14 +252,26 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    // 5. API: Network info
+    // 5. API: Dynamic Network info
     if (pathname === "/api/network" && method === "GET") {
+      const config = loadContractsConfig();
+      const isSepolia = config.network.chainId === 11155111 || process.env.NETWORK === "sepolia";
+      const baseUrl = getCheckoutBaseUrl();
+      const loopback = baseUrl ? isLoopbackUrl(baseUrl) : null;
       sendJson(res, 200, {
-        chainId: 31337,
-        name: "Hardhat Local",
-        localRpc: "http://127.0.0.1:8545",
-        lanRpc: `http://${LAN_IP}:8545`,
+        chainId: config.network.chainId,
+        name: config.network.name || (isSepolia ? "Sepolia" : "Hardhat Local"),
+        rpcUrl: config.network.rpcUrl,
+        lanRpc: config.network.lanRpcUrl || config.network.rpcUrl,
+        explorerUrl: config.network.explorerUrl || (isSepolia ? "https://sepolia.etherscan.io" : ""),
         lanHost: LAN_IP,
+        checkoutBaseUrl: baseUrl,
+        isPhoneQrDisabled: !baseUrl || loopback,
+        phoneQrDisabledReason: !baseUrl
+          ? "No phone-reachable CHECKOUT_BASE_URL configured in .env."
+          : loopback
+          ? "CHECKOUT_BASE_URL is set to a loopback address (localhost / 127.0.0.1). Phones cannot connect to loopback."
+          : null,
       });
       return;
     }
