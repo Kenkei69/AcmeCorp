@@ -11,6 +11,26 @@ const http = require("http");
 const url = require("url");
 const fs = require("fs");
 const path = require("path");
+
+// Auto-load local .env if present without external dependencies
+const envPath = path.join(__dirname, "..", ".env");
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, "utf8");
+  for (const line of envContent.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith("#")) {
+      const idx = trimmed.indexOf("=");
+      if (idx !== -1) {
+        const key = trimmed.slice(0, idx).trim();
+        const val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+        if (!process.env[key]) {
+          process.env[key] = val;
+        }
+      }
+    }
+  }
+}
+
 const { ethers } = require("ethers");
 const {
   createCheckoutSession,
@@ -78,7 +98,7 @@ function getStore() {
   if (!globalStore) {
     const config = loadContractsConfig();
     const contractAddr = config.contracts.SmartMandate.address;
-    const deploymentBlock = config.contracts.SmartMandate.deploymentBlock || 0;
+    const deploymentBlock = config.contracts.SmartMandate.deploymentBlock || config.network.deploymentBlock || 0;
     globalStore = new BillingStore({
       chainId: config.network.chainId || 31337,
       contractAddress: contractAddr,
@@ -116,8 +136,8 @@ function getWorker() {
       demoToken: demoToken,
       store: store,
       bankAdapter: bankAdapter,
-      deploymentBlock: config.contracts.SmartMandate.deploymentBlock || 0,
-      pollIntervalMs: 3000,
+      deploymentBlock: config.contracts.SmartMandate.deploymentBlock || config.network.deploymentBlock || 0,
+      pollIntervalMs: config.network.chainId === 11155111 ? 5000 : 3000,
     });
   }
   return globalWorker;
@@ -343,6 +363,15 @@ function startServer(port = PORT) {
       console.log(`   • Mobile LAN URL:  http://${LAN_IP}:${port}/`);
       console.log(`   • Subscriber View: http://${LAN_IP}:${port}/subscriber`);
       console.log(`======================================================\n`);
+
+      const config = loadContractsConfig();
+      const isSepolia = process.env.NETWORK === "sepolia" || process.env.CHAIN_ID === "11155111" || (config && config.network && config.network.chainId === 11155111);
+      if (isSepolia) {
+        const worker = getWorker();
+        worker.start();
+        console.log(`🤖 ChargeWorker daemon started in Sepolia mode (polling every ${worker.pollIntervalMs}ms)`);
+      }
+
       resolve(server);
     });
   });

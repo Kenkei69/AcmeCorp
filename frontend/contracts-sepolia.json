@@ -395,7 +395,8 @@
           ],
           "outputs": []
         }
-      ]
+      ],
+      "deploymentBlock": 12200724
     },
     "SmartMandate": {
       "address": "0x5215246eFEE31ad3eF5AE50E3E18B001C367312C",
@@ -1079,7 +1080,8 @@
           ],
           "outputs": []
         }
-      ]
+      ],
+      "deploymentBlock": 12200724
     }
   },
   "demoDefaults": {
