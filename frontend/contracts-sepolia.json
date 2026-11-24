@@ -1,0 +1,1100 @@
+{
+  "network": {
+    "name": "sepolia",
+    "chainId": 11155111,
+    "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+    "deploymentBlock": 12200724,
+    "explorerUrl": "https://sepolia.etherscan.io",
+    "confirmationsRequired": 1
+  },
+  "contracts": {
+    "DemoToken": {
+      "address": "0x24cA6f71be24c9B853550D9B3ce6Fc9a081a2Ae1",
+      "deploymentTx": "0xe3452ec785e04b1b8b613148d37859dd422c091b3a238906b922ac20daeccc48",
+      "abi": [
+        {
+          "type": "constructor",
+          "stateMutability": "undefined",
+          "payable": false,
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "ERC20InsufficientAllowance",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "spender"
+            },
+            {
+              "type": "uint256",
+              "name": "allowance"
+            },
+            {
+              "type": "uint256",
+              "name": "needed"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ERC20InsufficientBalance",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "sender"
+            },
+            {
+              "type": "uint256",
+              "name": "balance"
+            },
+            {
+              "type": "uint256",
+              "name": "needed"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ERC20InvalidApprover",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "approver"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ERC20InvalidReceiver",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "receiver"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ERC20InvalidSender",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "sender"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ERC20InvalidSpender",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "spender"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "OwnableInvalidOwner",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "owner"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "OwnableUnauthorizedAccount",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "account"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "Approval",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "owner",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "spender",
+              "indexed": true
+            },
+            {
+              "type": "uint256",
+              "name": "value",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "OwnershipTransferred",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "previousOwner",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "newOwner",
+              "indexed": true
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "Transfer",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "from",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "to",
+              "indexed": true
+            },
+            {
+              "type": "uint256",
+              "name": "value",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "allowance",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "owner"
+            },
+            {
+              "type": "address",
+              "name": "spender"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "uint256",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "approve",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "spender"
+            },
+            {
+              "type": "uint256",
+              "name": "value"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "bool",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "balanceOf",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "account"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "uint256",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "decimals",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "uint8",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "mint",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "to"
+            },
+            {
+              "type": "uint256",
+              "name": "amount"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "type": "function",
+          "name": "name",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "string",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "owner",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "address",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "renounceOwnership",
+          "constant": false,
+          "payable": false,
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "type": "function",
+          "name": "symbol",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "string",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "totalSupply",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "uint256",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "transfer",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "to"
+            },
+            {
+              "type": "uint256",
+              "name": "value"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "bool",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "transferFrom",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "from"
+            },
+            {
+              "type": "address",
+              "name": "to"
+            },
+            {
+              "type": "uint256",
+              "name": "value"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "bool",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "transferOwnership",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": "newOwner"
+            }
+          ],
+          "outputs": []
+        }
+      ],
+      "deploymentBlock": 12200724
+    },
+    "SmartMandate": {
+      "address": "0x5215246eFEE31ad3eF5AE50E3E18B001C367312C",
+      "deploymentTx": "0x6fd2cd35fecec9aaac062491be8be87674f40a5f349d18ec47783099d8c991a1",
+      "abi": [
+        {
+          "type": "constructor",
+          "stateMutability": "undefined",
+          "payable": false,
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "BatchLimitExceeded",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "size"
+            },
+            {
+              "type": "uint256",
+              "name": "limit"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "BillingPeriodOutOfRange",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "billingPeriod"
+            },
+            {
+              "type": "uint256",
+              "name": "maxCharges"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ChargeTooEarly",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "dueTime"
+            },
+            {
+              "type": "uint256",
+              "name": "blockTime"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ChargeWindowClosed",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "windowEnd"
+            },
+            {
+              "type": "uint256",
+              "name": "blockTime"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "DuplicateMandate",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ECDSAInvalidSignature",
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "ECDSAInvalidSignatureLength",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "length"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "ECDSAInvalidSignatureS",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "s"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "EmptyBatch",
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "InvalidShortString",
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "InvalidSignature",
+          "inputs": []
+        },
+        {
+          "type": "error",
+          "name": "InvoiceAlreadySettled",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            },
+            {
+              "type": "uint256",
+              "name": "billingPeriod"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "MandateExpired",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "expiry"
+            },
+            {
+              "type": "uint256",
+              "name": "blockTime"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "MandateNotActive",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            },
+            {
+              "type": "uint8",
+              "name": "state"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "NonceMismatch",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "expected"
+            },
+            {
+              "type": "uint256",
+              "name": "got"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "NotSubscriber",
+          "inputs": [
+            {
+              "type": "address",
+              "name": "caller"
+            },
+            {
+              "type": "address",
+              "name": "subscriber"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "SignatureExpired",
+          "inputs": [
+            {
+              "type": "uint256",
+              "name": "deadline"
+            },
+            {
+              "type": "uint256",
+              "name": "blockTime"
+            }
+          ]
+        },
+        {
+          "type": "error",
+          "name": "StringTooLong",
+          "inputs": [
+            {
+              "type": "string",
+              "name": "str"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "BatchChargeAttemptFailed",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId",
+              "indexed": true
+            },
+            {
+              "type": "uint256",
+              "name": "billingPeriod",
+              "indexed": true
+            },
+            {
+              "type": "bytes",
+              "name": "revertReason",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "ChargePaid",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId",
+              "indexed": true
+            },
+            {
+              "type": "uint256",
+              "name": "billingPeriod",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "subscriber",
+              "indexed": false
+            },
+            {
+              "type": "address",
+              "name": "merchant",
+              "indexed": false
+            },
+            {
+              "type": "address",
+              "name": "token",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "amount",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "timestamp",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "EIP712DomainChanged",
+          "inputs": []
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "MandateRegistered",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "subscriber",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "merchant",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "token",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "amount",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "interval",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "firstDueTime",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "maxCharges",
+              "indexed": false
+            },
+            {
+              "type": "uint256",
+              "name": "expiry",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "anonymous": false,
+          "name": "MandateRevoked",
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId",
+              "indexed": true
+            },
+            {
+              "type": "address",
+              "name": "subscriber",
+              "indexed": true
+            },
+            {
+              "type": "uint256",
+              "name": "timestamp",
+              "indexed": false
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "MANDATE_TYPEHASH",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "bytes32",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "MAX_BATCH_SIZE",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "uint256",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "charge",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            },
+            {
+              "type": "uint256",
+              "name": "billingPeriod"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "type": "function",
+          "name": "chargeBatch",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "tuple[]",
+              "name": "items",
+              "components": [
+                {
+                  "type": "bytes32",
+                  "name": "mandateId"
+                },
+                {
+                  "type": "uint256",
+                  "name": "billingPeriod"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "type": "tuple[]",
+              "name": "results",
+              "components": [
+                {
+                  "type": "bytes32",
+                  "name": "mandateId"
+                },
+                {
+                  "type": "uint256",
+                  "name": "billingPeriod"
+                },
+                {
+                  "type": "bool",
+                  "name": "success"
+                },
+                {
+                  "type": "bytes",
+                  "name": "revertReason"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "currentNonce",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "address",
+              "name": ""
+            }
+          ],
+          "outputs": [
+            {
+              "type": "uint256",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "eip712Domain",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "bytes1",
+              "name": "fields"
+            },
+            {
+              "type": "string",
+              "name": "name"
+            },
+            {
+              "type": "string",
+              "name": "version"
+            },
+            {
+              "type": "uint256",
+              "name": "chainId"
+            },
+            {
+              "type": "address",
+              "name": "verifyingContract"
+            },
+            {
+              "type": "bytes32",
+              "name": "salt"
+            },
+            {
+              "type": "uint256[]",
+              "name": "extensions"
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "getMandate",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "tuple",
+              "name": "",
+              "components": [
+                {
+                  "type": "address",
+                  "name": "subscriber"
+                },
+                {
+                  "type": "address",
+                  "name": "merchant"
+                },
+                {
+                  "type": "address",
+                  "name": "token"
+                },
+                {
+                  "type": "uint256",
+                  "name": "amount"
+                },
+                {
+                  "type": "uint256",
+                  "name": "interval"
+                },
+                {
+                  "type": "uint256",
+                  "name": "firstDueTime"
+                },
+                {
+                  "type": "uint256",
+                  "name": "maxCharges"
+                },
+                {
+                  "type": "uint256",
+                  "name": "expiry"
+                },
+                {
+                  "type": "uint256",
+                  "name": "nonce"
+                },
+                {
+                  "type": "uint256",
+                  "name": "signingDeadline"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "isSettled",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            },
+            {
+              "type": "uint256",
+              "name": "billingPeriod"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "bool",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "mandateState",
+          "constant": true,
+          "stateMutability": "view",
+          "payable": false,
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "uint8",
+              "name": ""
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "registerMandate",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "tuple",
+              "name": "mandate",
+              "components": [
+                {
+                  "type": "address",
+                  "name": "subscriber"
+                },
+                {
+                  "type": "address",
+                  "name": "merchant"
+                },
+                {
+                  "type": "address",
+                  "name": "token"
+                },
+                {
+                  "type": "uint256",
+                  "name": "amount"
+                },
+                {
+                  "type": "uint256",
+                  "name": "interval"
+                },
+                {
+                  "type": "uint256",
+                  "name": "firstDueTime"
+                },
+                {
+                  "type": "uint256",
+                  "name": "maxCharges"
+                },
+                {
+                  "type": "uint256",
+                  "name": "expiry"
+                },
+                {
+                  "type": "uint256",
+                  "name": "nonce"
+                },
+                {
+                  "type": "uint256",
+                  "name": "signingDeadline"
+                }
+              ]
+            },
+            {
+              "type": "bytes",
+              "name": "signature"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "revokeMandate",
+          "constant": false,
+          "payable": false,
+          "inputs": [
+            {
+              "type": "bytes32",
+              "name": "mandateId"
+            }
+          ],
+          "outputs": []
+        }
+      ],
+      "deploymentBlock": 12200724
+    }
+  },
+  "demoDefaults": {
+    "merchantName": "AcmeCorp Subscription Services (Sepolia)",
+    "merchantAddress": "0x25bd9dA57aFBeC2543a4e80975f43C3B095A0d81",
+    "tokenAddress": "0x24cA6f71be24c9B853550D9B3ce6Fc9a081a2Ae1",
+    "tokenSymbol": "DEMO",
+    "tokenDecimals": 18,
+    "chargeAmount": "5000000000000000000",
+    "chargeAmountFormatted": "5 DEMO",
+    "interval": 120,
+    "maxCharges": 3,
+    "allowanceCap": "15000000000000000000",
+    "allowanceCapFormatted": "15 DEMO"
+  }
+}

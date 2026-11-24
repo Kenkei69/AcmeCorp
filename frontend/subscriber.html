@@ -3,148 +3,488 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Subscriber Portal — Manage Smart Mandates</title>
+  <title>Manage Subscription — AcmeCorp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card: #131b2e;
-      --card-inner: #1b253d;
-      --border: #263352;
-      --primary: #3b82f6;
-      --danger: #ef4444;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg: #F9F8F6;
+      --surface: #FFFFFF;
+      --surface-subtle: #F3F1EC;
+      --border: #E8E5DF;
+      --border-strong: #D3CEC4;
+      --ink: #141413;
+      --ink-muted: #6B6860;
+      --ink-subtle: #96938B;
+      --cobalt: #1D4ED8;
+      --cobalt-hover: #1E40AF;
+      --cobalt-surface: #EFF6FF;
+      --cobalt-border: #BFDBFE;
+      --success: #047857;
+      --success-surface: #ECFDF5;
+      --success-border: #A7F3D0;
+      --warning: #B45309;
+      --warning-surface: #FFFBEB;
+      --warning-border: #FDE68A;
+      --danger: #B91C1C;
+      --danger-hover: #991B1B;
+      --danger-surface: #FEF2F2;
+      --danger-border: #FECACA;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 520px; }
 
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .brand-title { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 36px 20px;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+    }
 
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.4); margin-bottom: 16px; }
+    .container {
+      width: 100%;
+      max-width: 540px;
+    }
 
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .status-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-    .status-revoked { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
-    .status-completed { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
-    .status-unregistered { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
+    /* Masthead */
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
 
-    .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
-    input[type="text"] { flex: 1; background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 13px; font-family: monospace; outline: none; }
-    input[type="text"]:focus { border-color: var(--primary); }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; text-decoration: none; transition: all 0.2s; }
-    .btn-search { padding: 12px 18px; background: var(--primary); color: #fff; flex-shrink: 0; }
-    .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4); margin-top: 14px; }
-    .btn-danger:hover { background: #b91c1c; }
-    .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-    .btn-secondary { background: var(--card-inner); color: #fff; border: 1px solid var(--border); margin-top: 10px; }
+    .brand-mark {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
 
-    .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-    .detail-row:last-child { border-bottom: none; }
-    .label { color: var(--text-muted); }
-    .val { font-weight: 600; color: #fff; text-align: right; }
-    .val.mono { font-family: monospace; font-size: 12px; color: #93c5fd; }
+    .back-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-decoration: none;
+    }
+    .back-link:hover {
+      color: var(--ink);
+    }
 
-    .cycles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
-    .cycle-card { background: var(--card-inner); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--border); font-size: 12px; }
-    .cycle-card.settled { border-color: rgba(16, 185, 129, 0.5); background: rgba(16, 185, 129, 0.08); }
-    .cycle-status { font-weight: 700; margin-top: 4px; font-size: 11px; }
+    .page-title {
+      font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+      font-size: 34px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
 
-    .banner { padding: 12px 14px; border-radius: 12px; font-size: 13px; margin-bottom: 14px; display: none; }
-    .banner-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
-    .banner-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-subtle);
+      margin-bottom: 10px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink);
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: var(--cobalt);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--cobalt);
+      outline-offset: 2px;
+    }
+
+    .btn-cobalt {
+      background: var(--cobalt);
+      color: #FFFFFF;
+    }
+    .btn-cobalt:hover {
+      background: var(--cobalt-hover);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      border-color: var(--border-strong);
+      color: var(--ink);
+    }
+    .btn-outline:hover {
+      background: var(--surface-subtle);
+    }
+
+    .btn-danger-outline {
+      background: var(--surface);
+      border-color: var(--danger-border);
+      color: var(--danger);
+      width: 100%;
+    }
+    .btn-danger-outline:hover {
+      background: var(--danger-surface);
+    }
+
+    .btn-danger-solid {
+      background: var(--danger);
+      color: #FFFFFF;
+    }
+    .btn-danger-solid:hover {
+      background: var(--danger-hover);
+    }
+
+    /* Prominent Status Block */
+    .status-hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .status-label {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-active {
+      background: var(--success-surface);
+      color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+
+    .tag-revoked {
+      background: var(--surface-subtle);
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+    }
+
+    .tag-completed {
+      background: var(--cobalt-surface);
+      color: var(--cobalt);
+      border: 1px solid var(--cobalt-border);
+    }
+
+    .next-billing-banner {
+      background: var(--surface-subtle);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .next-billing-title {
+      color: var(--ink-muted);
+      font-size: 12px;
+    }
+    .next-billing-time {
+      font-weight: 600;
+    }
+
+    /* Compact Payment History */
+    .periods-list {
+      margin-bottom: 24px;
+    }
+
+    .period-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--surface-subtle);
+      font-size: 13px;
+    }
+    .period-row:last-child {
+      border-bottom: none;
+    }
+
+    .period-name {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .period-status {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .period-status.settled {
+      color: var(--success);
+    }
+    .period-status.pending {
+      color: var(--ink-muted);
+    }
+
+    /* Cancellation Dialog */
+    .cancel-box {
+      margin-top: 16px;
+    }
+
+    .confirm-dialog {
+      background: var(--danger-surface);
+      border: 1px solid var(--danger-border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .confirm-text {
+      font-size: 13px;
+      color: var(--danger);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Expandable Identifiers */
+    .details-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .details-summary {
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-subtle);
+    }
+    .details-summary::-webkit-details-marker { display: none; }
+    .details-summary::after { content: "+"; font-family: monospace; }
+    details[open] .details-summary::after { content: "−"; }
+
+    .details-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .detail-label { color: var(--ink-muted); }
+    .detail-value { font-family: 'JetBrains Mono', monospace; color: var(--ink); }
+
+    .banner {
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      display: none;
+    }
+    .banner-danger { background: var(--danger-surface); border: 1px solid var(--danger-border); color: var(--danger); }
+    .banner-success { background: var(--success-surface); border: 1px solid var(--success-border); color: var(--success); }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <div class="brand-title">🛡️ Subscriber Mandate Portal</div>
-      <a href="/" style="color: var(--primary); text-decoration: none; font-size: 13px;">← Merchant QR</a>
+    <!-- Masthead -->
+    <header class="masthead">
+      <div class="brand-group">
+        <span class="brand-mark">AcmeCorp</span>
+      </div>
+      <a href="/" class="back-link">← Subscriptions</a>
     </header>
+
+    <h1 class="page-title">Manage subscription</h1>
 
     <div class="banner banner-danger" id="errorBanner"></div>
     <div class="banner banner-success" id="successBanner"></div>
 
     <!-- Lookup Box -->
-    <div class="card">
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
-        Lookup Active Mandate by ID (or auto-detected from session):
-      </div>
-      <div class="input-group">
-        <input type="text" id="mandateIdInput" placeholder="0x... (32-byte Mandate ID)">
-        <button class="btn btn-search" onclick="fetchMandate()">Inspect</button>
+    <div class="card" id="lookupCard">
+      <div class="card-label">Mandate Identifier</div>
+      <div class="input-row">
+        <input type="text" id="mandateIdInput" placeholder="0x… (32-byte Mandate ID)">
+        <button class="btn btn-cobalt" onclick="fetchMandate()">Inspect</button>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 12px; color: var(--text-muted);">Connected Wallet:</span>
-        <span class="val mono" id="connectedWalletDisplay" style="font-size: 12px;">Not Connected</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px;">
+        <span style="color: var(--ink-muted);">Wallet connection:</span>
+        <span id="connectedWalletDisplay" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">Not connected</span>
       </div>
-      <button class="btn btn-secondary" id="connectWalletBtn" onclick="connectWallet()" style="padding: 10px; font-size: 13px;">
-        👛 Connect Subscriber Wallet
+      <button class="btn btn-outline" id="connectWalletBtn" onclick="connectWallet()" style="width: 100%; margin-top: 10px;">
+        Connect subscriber wallet
       </button>
     </div>
 
-    <!-- Mandate Details Display Card -->
+    <!-- Active Subscription View -->
     <div class="card" id="detailsCard" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 16px; font-weight: 700;">Mandate Details</h3>
-        <span class="status-badge" id="statusBadge">Checking...</span>
+      <!-- Status Hero -->
+      <div class="status-hero">
+        <div>
+          <div class="status-label">Subscription Status</div>
+          <div class="status-value" id="statusValueHeadline">Active</div>
+        </div>
+        <span class="status-tag tag-active" id="statusBadge">Active</span>
       </div>
 
-      <div class="detail-row">
-        <span class="label">Mandate ID</span>
-        <span class="val mono" id="mandateIdDisplay" style="font-size: 11px;">0x...</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Subscriber</span>
-        <span class="val mono" id="subscriberDisplay">0x...</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Merchant Payout</span>
-        <span class="val mono" id="merchantDisplay">0x...</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Terms</span>
-        <span class="val" id="termsDisplay">5 DEMO every 120s (max 3)</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Allowance Cap</span>
-        <span class="val" style="color: #34d399;">15 DEMO</span>
+      <!-- Next Billing Banner -->
+      <div class="next-billing-banner" id="nextBillingRow">
+        <span class="next-billing-title">Next billing payment</span>
+        <span class="next-billing-time" id="nextBillingTimeDisplay">5 DEMO due in 2 minutes</span>
       </div>
 
-      <!-- Billing Cycles Settlement Status -->
-      <div style="margin-top: 16px;">
-        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Billing Period Statuses:</div>
-        <div class="cycles-grid">
-          <div class="cycle-card" id="cycleCard0">
-            <div>Period 0</div>
-            <div class="cycle-status" id="cycleStatus0">Pending</div>
-          </div>
-          <div class="cycle-card" id="cycleCard1">
-            <div>Period 1</div>
-            <div class="cycle-status" id="cycleStatus1">Pending</div>
-          </div>
-          <div class="cycle-card" id="cycleCard2">
-            <div>Period 2</div>
-            <div class="cycle-status" id="cycleStatus2">Pending</div>
-          </div>
+      <!-- Compact Payment Periods -->
+      <div class="card-label">Payment Schedule (3 Periods)</div>
+      <div class="periods-list">
+        <div class="period-row" id="periodRow0">
+          <span class="period-name">Period 0 · 5 DEMO</span>
+          <span class="period-status pending" id="periodStatus0">Pending</span>
+        </div>
+        <div class="period-row" id="periodRow1">
+          <span class="period-name">Period 1 · 5 DEMO</span>
+          <span class="period-status pending" id="periodStatus1">Pending</span>
+        </div>
+        <div class="period-row" id="periodRow2">
+          <span class="period-name">Period 2 · 5 DEMO</span>
+          <span class="period-status pending" id="periodStatus2">Pending</span>
         </div>
       </div>
 
-      <!-- Revocation Action -->
-      <div id="revocationActionArea" style="margin-top: 18px;">
-        <button class="btn btn-danger" id="revokeBtn" onclick="revokeMandate()">
-          🚫 Revoke Mandate On-Chain
+      <!-- Cancellation Action with Explanatory Confirmation -->
+      <div class="cancel-box" id="cancellationArea">
+        <button class="btn btn-danger-outline" id="initCancelBtn" onclick="showCancelConfirmation()">
+          Cancel future payments
         </button>
-        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">
-          Revoking cancels all future pull charges immediately upon on-chain confirmation.
+
+        <div class="confirm-dialog" id="confirmDialog">
+          <div class="confirm-text">
+            <strong>Cancel future payments?</strong>
+            This will immediately revoke your mandate on-chain and prevent all future pull charges. Past settled payments are not affected.
+          </div>
+          <div class="confirm-actions">
+            <button class="btn btn-danger-solid" id="confirmRevokeBtn" onclick="revokeMandate()">
+              Confirm cancellation
+            </button>
+            <button class="btn btn-outline" onclick="hideCancelConfirmation()">
+              Keep subscription
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Collapsed Technical Identifiers -->
+    <details class="details-box" id="technicalDetailsBox" style="display: none;">
+      <summary class="details-summary">Contract & Mandate Identifiers</summary>
+      <div class="details-body">
+        <div class="detail-item">
+          <span class="detail-label">Mandate ID:</span>
+          <span class="detail-value" id="mandateIdDisplay">—</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Subscriber:</span>
+          <span class="detail-value" id="subscriberDisplay">—</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Merchant:</span>
+          <span class="detail-value" id="merchantDisplay">—</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">SmartMandate:</span>
+          <span class="detail-value" id="smartMandateAddrDisplay">—</span>
+        </div>
+      </div>
+    </details>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
@@ -160,11 +500,10 @@
         const res = await fetch('/api/contracts');
         contractsConfig = await res.json();
 
-        // Check if query param ?mandateId=... is provided or in local storage
         const urlParams = new URLSearchParams(window.location.search);
-        const paramId = urlParams.get('mandateId') || localStorage.getItem('lastActiveMandateId');
-        if (paramId) {
-          document.getElementById('mandateIdInput').value = paramId;
+        const queryId = urlParams.get('mandateId') || localStorage.getItem('lastActiveMandateId');
+        if (queryId) {
+          document.getElementById('mandateIdInput').value = queryId;
           fetchMandate();
         }
 
@@ -175,15 +514,15 @@
             connectWallet();
           }
         }
-      } catch (e) {
-        console.error("Init error:", e);
+      } catch (err) {
+        console.error("Initialization error:", err);
       }
     }
 
     async function connectWallet() {
       hideMessages();
       if (!window.ethereum) {
-        showError("No Web3 wallet found. Please use a Web3 browser or extension.");
+        showError("No Web3 wallet found. Please use a Web3-compatible browser.");
         return;
       }
       try {
@@ -191,12 +530,15 @@
         await provider.send("eth_requestAccounts", []);
         signer = await provider.getSigner();
         userAddress = await signer.getAddress();
-        document.getElementById('connectedWalletDisplay').innerText =
-          userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+
+        document.getElementById('connectedWalletDisplay').innerText = shorten(userAddress);
         document.getElementById('connectWalletBtn').style.display = 'none';
 
-        if (currentMandateId) fetchMandate();
+        if (currentMandateId) {
+          fetchMandate();
+        }
       } catch (err) {
+        console.error("Wallet error:", err);
         showError("Wallet connection failed: " + err.message);
       }
     }
@@ -211,13 +553,13 @@
 
       currentMandateId = inputId;
       document.getElementById('detailsCard').style.display = 'block';
+      document.getElementById('technicalDetailsBox').style.display = 'block';
 
       try {
         const smartMandateAddr = contractsConfig.contracts.SmartMandate.address;
         const readProvider = provider || new ethers.JsonRpcProvider(contractsConfig.network.rpcUrl);
         const contract = new ethers.Contract(smartMandateAddr, contractsConfig.contracts.SmartMandate.abi, readProvider);
 
-        // Fetch Mandate struct and state
         const [stateNum, mandateStruct] = await Promise.all([
           contract.mandateState(currentMandateId),
           contract.getMandate(currentMandateId)
@@ -225,62 +567,76 @@
 
         renderMandate(currentMandateId, Number(stateNum), mandateStruct);
 
-        // Fetch settlement status for 3 periods
         for (let i = 0; i < 3; i++) {
           const settled = await contract.isSettled(currentMandateId, i);
-          const card = document.getElementById(`cycleCard${i}`);
-          const status = document.getElementById(`cycleStatus${i}`);
+          const statusElem = document.getElementById(`periodStatus${i}`);
           if (settled) {
-            card.className = "cycle-card settled";
-            status.innerText = "SETTLED ✅";
-            status.style.color = "#34d399";
+            statusElem.className = "period-status settled";
+            statusElem.innerText = "Settled";
           } else {
-            card.className = "cycle-card";
-            status.innerText = "Pending";
-            status.style.color = "#94a3b8";
+            statusElem.className = "period-status pending";
+            statusElem.innerText = "Pending";
           }
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        showError("Failed to fetch mandate from contract: " + (err.message || err));
+        showError("Failed to fetch mandate: " + (err.message || err));
       }
     }
 
     function renderMandate(id, state, m) {
-      document.getElementById('mandateIdDisplay').innerText = id;
-      document.getElementById('subscriberDisplay').innerText = m.subscriber;
-      document.getElementById('merchantDisplay').innerText = m.merchant;
+      document.getElementById('mandateIdDisplay').innerText = shorten(id);
+      document.getElementById('mandateIdDisplay').title = id;
+      document.getElementById('subscriberDisplay').innerText = shorten(m.subscriber);
+      document.getElementById('subscriberDisplay').title = m.subscriber;
+      document.getElementById('merchantDisplay').innerText = shorten(m.merchant);
+      document.getElementById('merchantDisplay').title = m.merchant;
+      document.getElementById('smartMandateAddrDisplay').innerText = shorten(contractsConfig.contracts.SmartMandate.address);
 
+      const headline = document.getElementById('statusValueHeadline');
       const badge = document.getElementById('statusBadge');
-      const revokeBtn = document.getElementById('revokeBtn');
+      const cancelArea = document.getElementById('cancellationArea');
+      const nextRow = document.getElementById('nextBillingRow');
 
       // State enum: 0: UNREGISTERED, 1: ACTIVE, 2: REVOKED, 3: COMPLETED
       if (state === 1) {
-        badge.className = "status-badge status-active";
-        badge.innerText = "● ACTIVE";
-        revokeBtn.disabled = false;
-        revokeBtn.innerText = "🚫 Revoke Mandate On-Chain";
+        headline.innerText = "Active";
+        badge.className = "status-tag tag-active";
+        badge.innerText = "Active";
+        cancelArea.style.display = "block";
+        nextRow.style.display = "flex";
       } else if (state === 2) {
-        badge.className = "status-badge status-revoked";
-        badge.innerText = "● REVOKED";
-        revokeBtn.disabled = true;
-        revokeBtn.innerText = "Mandate is Already Revoked";
+        headline.innerText = "Canceled";
+        badge.className = "status-tag tag-revoked";
+        badge.innerText = "Canceled";
+        cancelArea.innerHTML = `<div style="font-size: 13px; color: var(--ink-muted); text-align: center; padding: 12px 0;">Subscription is canceled on-chain. Future charges are blocked.</div>`;
+        nextRow.style.display = "none";
       } else if (state === 3) {
-        badge.className = "status-badge status-completed";
-        badge.innerText = "● COMPLETED";
-        revokeBtn.disabled = true;
-        revokeBtn.innerText = "All Cycles Completed";
+        headline.innerText = "Completed";
+        badge.className = "status-tag tag-completed";
+        badge.innerText = "Completed";
+        cancelArea.innerHTML = `<div style="font-size: 13px; color: var(--ink-muted); text-align: center; padding: 12px 0;">All scheduled payment cycles have concluded.</div>`;
+        nextRow.style.display = "none";
       } else {
-        badge.className = "status-badge status-unregistered";
-        badge.innerText = "● UNREGISTERED";
-        revokeBtn.disabled = true;
+        headline.innerText = "Unregistered";
+        badge.className = "status-tag tag-revoked";
+        badge.innerText = "Unregistered";
+        cancelArea.style.display = "none";
       }
 
-      // Check if connected wallet is the subscriber
       if (userAddress && userAddress.toLowerCase() !== m.subscriber.toLowerCase() && state === 1) {
-        revokeBtn.disabled = true;
-        revokeBtn.innerText = "Only Subscriber Can Revoke";
+        cancelArea.innerHTML = `<div style="font-size: 12px; color: var(--ink-muted); text-align: center; padding: 8px 0;">Connected wallet (${shorten(userAddress)}) does not match subscriber. Only the subscriber can cancel.</div>`;
       }
+    }
+
+    function showCancelConfirmation() {
+      document.getElementById('confirmDialog').style.display = 'block';
+      document.getElementById('initCancelBtn').style.display = 'none';
+    }
+
+    function hideCancelConfirmation() {
+      document.getElementById('confirmDialog').style.display = 'none';
+      document.getElementById('initCancelBtn').style.display = 'block';
     }
 
     async function revokeMandate() {
@@ -290,40 +646,36 @@
         if (!signer) return;
       }
 
-      const btn = document.getElementById('revokeBtn');
+      const btn = document.getElementById('confirmRevokeBtn');
       btn.disabled = true;
-      btn.innerText = "⏳ Requesting Revocation in Wallet...";
+      btn.innerText = "Confirming in wallet…";
 
       try {
         const smartMandateAddr = contractsConfig.contracts.SmartMandate.address;
         const contract = new ethers.Contract(smartMandateAddr, contractsConfig.contracts.SmartMandate.abi, signer);
 
         const tx = await contract.revokeMandate(currentMandateId);
-        btn.innerText = "⏳ Confirming on-chain...";
-        const receipt = await tx.wait();
+        btn.innerText = "Mining cancellation on-chain…";
+        await tx.wait();
 
-        // Verify MandateRevoked event
-        const events = receipt.logs
-          .map(l => { try { return contract.interface.parseLog(l); } catch { return null; } })
-          .filter(e => e && e.name === "MandateRevoked");
-
-        if (events.length > 0) {
-          showSuccess("Mandate successfully revoked on-chain! Future charges are now blocked.");
-          await fetchMandate();
-        } else {
-          showSuccess("Revocation transaction confirmed.");
-          await fetchMandate();
-        }
+        showSuccess("Future payments have been canceled on-chain.");
+        hideCancelConfirmation();
+        await fetchMandate();
       } catch (err) {
         console.error("Revocation error:", err);
         btn.disabled = false;
-        btn.innerText = "🚫 Retry Revoke Mandate";
+        btn.innerText = "Confirm cancellation";
         if (err.code === 4001) {
-          showError("Revocation transaction was rejected in wallet.");
+          showError("Cancellation transaction was rejected in wallet.");
         } else {
-          showError("Revocation failed: " + (err.message || err));
+          showError("Cancellation failed: " + (err.message || err));
         }
       }
+    }
+
+    function shorten(addr) {
+      if (!addr || addr.length < 10) return addr;
+      return addr.slice(0, 6) + "…" + addr.slice(-4);
     }
 
     function showError(msg) {

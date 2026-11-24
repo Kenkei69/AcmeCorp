@@ -3,229 +3,459 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AcmeCorp Checkout — Smart Mandate Recurring Billing</title>
+  <title>Checkout — AcmeCorp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card: #131b2e;
-      --card-inner: #1b253d;
-      --border: #263352;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg: #F9F8F6;
+      --surface: #FFFFFF;
+      --surface-subtle: #F3F1EC;
+      --border: #E8E5DF;
+      --border-strong: #D3CEC4;
+      --ink: #141413;
+      --ink-muted: #6B6860;
+      --ink-subtle: #96938B;
+      --cobalt: #1D4ED8;
+      --cobalt-hover: #1E40AF;
+      --cobalt-surface: #EFF6FF;
+      --cobalt-border: #BFDBFE;
+      --success: #047857;
+      --success-surface: #ECFDF5;
+      --success-border: #A7F3D0;
+      --warning: #B45309;
+      --warning-surface: #FFFBEB;
+      --warning-border: #FDE68A;
+      --danger: #B91C1C;
+      --danger-surface: #FEF2F2;
+      --danger-border: #FECACA;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; display: flex; justify-content: center; align-items: flex-start; }
-    .checkout-wrapper { width: 100%; max-width: 480px; margin-top: 10px; }
 
-    .header-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
-    .brand-text { font-size: 17px; font-weight: 700; color: #fff; }
-    .status-pill { font-size: 11px; padding: 4px 8px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); font-weight: 600; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 32px 16px;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.4); margin-bottom: 16px; }
+    .checkout-container {
+      width: 100%;
+      max-width: 440px;
+    }
 
-    /* Plan Hero */
-    .plan-hero { text-align: center; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-    .plan-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .plan-amount { font-size: 38px; font-weight: 800; color: #fff; display: flex; align-items: baseline; justify-content: center; gap: 6px; }
-    .plan-amount span { font-size: 16px; font-weight: 600; color: #60a5fa; }
-    .plan-sub { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+    /* Masthead */
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
 
-    /* Terms Table */
-    .terms-box { background: var(--card-inner); border-radius: 14px; padding: 14px 16px; margin-bottom: 18px; font-size: 13px; }
-    .term-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .term-item:last-child { border-bottom: none; }
-    .term-label { color: var(--text-muted); }
-    .term-val { font-weight: 600; color: #fff; text-align: right; }
-    .term-val.highlight { color: #34d399; }
-    .term-val.mono { font-family: monospace; font-size: 12px; color: #93c5fd; }
+    .brand-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
 
-    /* Expiration Alert */
-    .timer-alert { display: flex; align-items: center; justify-content: space-between; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; color: #fbbf24; }
-    .timer-alert.expired { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+    .network-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--ink-muted);
+    }
+
+    /* Main Card */
+    .checkout-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
+    }
+
+    /* Single Clean Summary Block (No repeated pricing) */
+    .summary-header {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .merchant-name {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
+    .price-headline {
+      font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+      font-size: 44px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .price-cadence {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Compact Term Rows */
+    .terms-list {
+      margin-bottom: 28px;
+    }
+
+    .term-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--surface-subtle);
+    }
+    .term-row:last-child {
+      border-bottom: none;
+    }
+
+    .term-label {
+      color: var(--ink-muted);
+    }
+
+    .term-val {
+      font-weight: 600;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .term-val.mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Progress & Step Status */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    /* Account Strip (when connected) */
+    .subscriber-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .subscriber-address {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .subscriber-balance {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ink-muted);
+    }
 
     /* Buttons */
-    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 15px; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
-    .btn-primary { background: linear-gradient(135deg, var(--primary), #2563eb); color: #fff; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-    .btn-secondary { background: var(--card-inner); color: #fff; border: 1px solid var(--border); margin-top: 10px; }
-    .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
-    .btn-faucet { background: #1e1b4b; color: #a5b4fc; border: 1px dashed #6366f1; padding: 10px; font-size: 13px; margin-top: 10px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 600; }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      outline: none;
+    }
 
-    /* Stepper */
-    .stepper { margin: 16px 0; }
-    .step-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: var(--card-inner); margin-bottom: 8px; border: 1px solid transparent; }
-    .step-item.active { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-    .step-item.done { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08); }
-    .step-circle { width: 28px; height: 28px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
-    .step-item.active .step-circle { background: var(--primary); }
-    .step-item.done .step-circle { background: var(--success); }
-    .step-text { font-size: 13px; }
-    .step-text .step-title { font-weight: 600; color: #fff; }
-    .step-text .step-desc { font-size: 11px; color: var(--text-muted); }
+    .btn:focus-visible {
+      outline: 2px solid var(--cobalt);
+      outline-offset: 2px;
+    }
 
-    /* Banners & Messages */
-    .banner { padding: 12px 14px; border-radius: 12px; font-size: 13px; margin-bottom: 14px; display: none; line-height: 1.4; }
-    .banner-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
-    .banner-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fde68a; }
-    .banner-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
+    .btn-cobalt {
+      background: var(--cobalt);
+      color: #FFFFFF;
+    }
+    .btn-cobalt:hover {
+      background: var(--cobalt-hover);
+    }
+    .btn-cobalt:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      border-color: var(--border-strong);
+      color: var(--ink);
+      margin-top: 10px;
+    }
+    .btn-outline:hover {
+      background: var(--surface-subtle);
+    }
+
+    .wallet-guidance {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    .wallet-guidance a, .wallet-guidance button {
+      color: var(--cobalt);
+      text-decoration: none;
+      font-weight: 600;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .wallet-guidance a:hover, .wallet-guidance button:hover {
+      text-decoration: underline;
+    }
+
+    /* State Views */
+    .state-success {
+      text-align: center;
+      padding: 24px 8px;
+    }
+
+    .success-headline {
+      font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .success-desc {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .state-banner {
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .banner-danger {
+      background: var(--danger-surface);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+    }
+
+    .banner-warning {
+      background: var(--warning-surface);
+      border: 1px solid var(--warning-border);
+      color: var(--warning);
+    }
+
+    /* Expandable Details */
+    .details-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    .details-summary {
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-subtle);
+    }
+    .details-summary::-webkit-details-marker { display: none; }
+    .details-summary::after { content: "+"; font-family: monospace; }
+    details[open] .details-summary::after { content: "−"; }
+
+    .details-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .detail-label { color: var(--ink-muted); }
+    .detail-value { font-family: 'JetBrains Mono', monospace; color: var(--ink); }
   </style>
 </head>
 <body>
-  <div class="checkout-wrapper">
-    <div class="header-bar">
-      <div class="brand">
-        <div class="brand-icon">⚡</div>
-        <div>
-          <div class="brand-text">AcmeCorp Subscription</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Smart Mandates • Project 10</div>
-        </div>
-      </div>
-      <div class="status-pill" id="networkPill">Chain 31337</div>
-    </div>
+  <div class="checkout-container">
+    <!-- Masthead -->
+    <header class="masthead">
+      <span class="brand-title">AcmeCorp Checkout</span>
+      <span class="network-badge" id="networkPill">Sepolia</span>
+    </header>
 
-    <!-- Banner Alerts -->
-    <div class="banner banner-danger" id="errorBanner"></div>
-    <div class="banner banner-warning" id="warningBanner"></div>
-    <div class="banner banner-success" id="successBanner"></div>
+    <!-- State Banners -->
+    <div class="state-banner banner-danger" id="errorBanner"></div>
+    <div class="state-banner banner-warning" id="warningBanner"></div>
 
-    <!-- Session Countdown -->
-    <div class="timer-alert" id="timerBox">
-      <span>⏳ Checkout Session:</span>
-      <strong id="sessionCountdown">Loading...</strong>
-    </div>
-
-    <!-- Main Checkout Card -->
-    <div class="card" id="mainCard">
-      <!-- 1. Subscription Terms Display (Always visible before connecting) -->
-      <div class="plan-hero">
-        <div class="plan-title">Subscription Authorization</div>
-        <div class="plan-amount">
-          5 <span style="font-size: 20px;">DEMO</span>
-        </div>
-        <div class="plan-sub">Billed every 120 seconds for 3 periods</div>
+    <!-- Main Card -->
+    <div class="checkout-card" id="mainCard">
+      <!-- Compact Plan Summary (Shown once, no duplicate blocks) -->
+      <div class="summary-header">
+        <div class="merchant-name" id="merchantNameDisplay">AcmeCorp Subscription Services</div>
+        <div class="price-headline">5 DEMO</div>
+        <div class="price-cadence">Every 2 minutes · Up to 3 payments</div>
       </div>
 
-      <div class="terms-box">
-        <div class="term-item">
-          <span class="term-label">Merchant Payout</span>
-          <span class="term-val mono" id="merchantAddressDisplay">0x7099...79C8</span>
+      <div class="terms-list">
+        <div class="term-row">
+          <span class="term-label">Maximum total</span>
+          <span class="term-val">15 DEMO</span>
         </div>
-        <div class="term-item">
-          <span class="term-label">Token Contract</span>
-          <span class="term-val mono" id="tokenAddressDisplay">0x5FbD...0aa3</span>
-        </div>
-        <div class="term-item">
-          <span class="term-label">Recurring Debit</span>
-          <span class="term-val">5 DEMO / 2 minutes</span>
-        </div>
-        <div class="term-item">
-          <span class="term-label">Total Duration</span>
-          <span class="term-val">3 scheduled cycles</span>
-        </div>
-        <div class="term-item">
-          <span class="term-label">Maximum Total Cap</span>
-          <span class="term-val highlight">15 DEMO</span>
-        </div>
-        <div class="term-item">
-          <span class="term-label">First Due Time</span>
+        <div class="term-row">
+          <span class="term-label">First payment</span>
           <span class="term-val" id="firstDueDisplay">In 2 minutes</span>
+        </div>
+        <div class="term-row">
+          <span class="term-label">Merchant payout</span>
+          <span class="term-val mono" id="merchantAddressDisplay">0x...</span>
         </div>
       </div>
 
       <!-- State 1: Connect Wallet (Initial) -->
       <div id="connectWalletState">
-        <button class="btn btn-primary" id="connectWalletBtn" onclick="connectWallet()">
-          👛 Connect Mobile Wallet
+        <button class="btn btn-cobalt" id="connectWalletBtn" onclick="connectWallet()">
+          Connect wallet
         </button>
-        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px;">
-          Compatible with MetaMask Mobile, Rabby, Coinbase Wallet & In-App Web3 Browsers.
+
+        <div class="wallet-guidance" id="noWalletNotice" style="display: none;">
+          No Web3 wallet detected in this browser.
+          <div style="margin-top: 6px;">
+            <button onclick="copyCheckoutUrl()">Copy checkout link</button> and open it inside your mobile wallet's browser (MetaMask, Coinbase Wallet, or Rabby).
+          </div>
         </div>
       </div>
 
-      <!-- State 2: Connected & Signing Flow -->
+      <!-- State 2: Step-by-Step Signing Flow -->
       <div id="signingFlowState" style="display: none;">
-        <!-- Account Info -->
-        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-          <div>
-            <div style="color: var(--text-muted);">Connected Subscriber:</div>
-            <div class="mono" id="subscriberAddressDisplay" style="color: #93c5fd; font-weight: 600;">0x...</div>
-          </div>
-          <div style="text-align: right;">
-            <div style="color: var(--text-muted);">Token Balance:</div>
-            <div style="font-weight: 700; color: #38bdf8;" id="subscriberBalanceDisplay">0 DEMO</div>
-          </div>
+        <div class="subscriber-strip">
+          <span class="subscriber-address" id="subscriberAddressDisplay">0x...</span>
+          <span class="subscriber-balance" id="subscriberBalanceDisplay">0 DEMO</span>
         </div>
 
-        <!-- Local Testnet Faucet Button -->
-        <button class="btn-faucet" id="faucetBtn" onclick="mintTestTokens()" style="display: none;">
-          🎁 Mint 15 DEMO (Local Testnet Faucet)
-        </button>
-
-        <!-- 3-Step Interactive Process -->
-        <div class="stepper">
-          <div class="step-item active" id="step1">
-            <div class="step-circle" id="circle1">1</div>
-            <div class="step-text">
-              <div class="step-title">Sign Mandate Authorization</div>
-              <div class="step-desc">Sign EIP-712 structured billing terms (no gas fee)</div>
-            </div>
-          </div>
-
-          <div class="step-item" id="step2">
-            <div class="step-circle" id="circle2">2</div>
-            <div class="step-text">
-              <div class="step-title">Approve 15 DEMO Cap</div>
-              <div class="step-desc">Authorize SmartMandate pull allowance of 15 DEMO</div>
-            </div>
-          </div>
-
-          <div class="step-item" id="step3">
-            <div class="step-circle" id="circle3">3</div>
-            <div class="step-text">
-              <div class="step-title">Register On-Chain</div>
-              <div class="step-desc">Store mandate in SmartMandate.sol contract</div>
-            </div>
-          </div>
+        <div class="step-indicator" id="stepIndicatorLabel">
+          <span>Step 1 of 3</span>
+          <span id="stepActionName">Sign authorization</span>
         </div>
-
-        <!-- Action Button -->
-        <button class="btn btn-primary" id="actionBtn" onclick="handleCurrentStep()">
-          ✍️ Step 1: Sign Mandate (EIP-712)
-        </button>
-      </div>
-
-      <!-- State 3: Confirmed & Active -->
-      <div id="confirmedState" style="display: none; text-align: center; padding: 10px 0;">
-        <div style="font-size: 48px; margin-bottom: 8px;">🎉</div>
-        <h3 style="color: #34d399; font-size: 20px; font-weight: 700; margin-bottom: 8px;">Subscription Active!</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-          Your recurring smart mandate has been confirmed on-chain. Future debits will be pulled automatically according to agreed terms.
+        <p class="step-desc" id="stepHelpText">
+          Sign the EIP-712 billing authorization terms in your wallet. This action is gasless.
         </p>
 
-        <div style="background: var(--card-inner); border-radius: 12px; padding: 14px; text-align: left; font-size: 12px; margin-bottom: 16px;">
-          <div style="color: var(--text-muted); margin-bottom: 4px;">Confirmed Mandate ID:</div>
-          <div class="mono" id="confirmedMandateIdDisplay" style="color: #60a5fa; word-break: break-all; font-weight: 600;">0x...</div>
-        </div>
+        <button class="btn btn-cobalt" id="actionBtn" onclick="handleCurrentStep()">
+          Sign authorization
+        </button>
+      </div>
 
-        <a class="btn btn-success" id="manageSubBtn" href="/subscriber">
-          🛡️ View & Manage in Subscriber Portal
+      <!-- State 3: Confirmed Active State -->
+      <div id="confirmedState" class="state-success" style="display: none;">
+        <h2 class="success-headline">Subscription active</h2>
+        <p class="success-desc">
+          Your smart mandate has been registered on-chain. The first 5 DEMO payment opens in 2 minutes.
+        </p>
+        <a class="btn btn-cobalt" id="manageSubBtn" href="/subscriber">
+          Manage subscription →
         </a>
       </div>
     </div>
+
+    <!-- Collapsed Technical Details -->
+    <details class="details-box">
+      <summary class="details-summary">Contract & Session Identifiers</summary>
+      <div class="details-body">
+        <div class="detail-item">
+          <span class="detail-label">SmartMandate:</span>
+          <span class="detail-value" id="cfgMandate">—</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Token:</span>
+          <span class="detail-value" id="cfgToken">—</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Request ID:</span>
+          <span class="detail-value" id="cfgRequestId">—</span>
+        </div>
+        <div class="detail-item" id="confirmedMandateRow" style="display: none;">
+          <span class="detail-label">Mandate ID:</span>
+          <span class="detail-value" id="confirmedMandateIdDisplay">—</span>
+        </div>
+      </div>
+    </details>
   </div>
 
-  <!-- Ethers v6 standalone for in-browser provider, signing & ABI encoding -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
   <script>
-    // State management
     let contractsConfig = null;
     let sessionData = null;
     let userAddress = null;
@@ -238,15 +468,20 @@
     let signature = null;
     let mandateId = null;
 
-    // Load checkout request data from query param ?request=req_...
     async function initCheckout() {
       const urlParams = new URLSearchParams(window.location.search);
       const requestId = urlParams.get('request');
 
       if (!requestId) {
-        showError("Invalid checkout URL: Missing request ID.");
+        showError("Invalid checkout link: Missing request parameter.");
         document.getElementById('connectWalletBtn').disabled = true;
         return;
+      }
+
+      // Detect Web3 provider presence
+      if (!window.ethereum) {
+        document.getElementById('noWalletNotice').style.display = 'block';
+        document.getElementById('connectWalletBtn').disabled = true;
       }
 
       try {
@@ -256,7 +491,7 @@
         ]);
 
         if (sessionRes.status === 410) {
-          showExpired("This checkout link has expired. Please ask the merchant for a new QR code.");
+          showExpired("This checkout session has expired. Please ask the merchant for a new QR code.");
           return;
         }
 
@@ -268,19 +503,30 @@
         contractsConfig = await configRes.json();
         sessionData = await sessionRes.json();
 
+        // Update network badge
+        const netName = sessionData.network.name || (sessionData.network.chainId === 11155111 ? "Sepolia" : "Hardhat");
+        document.getElementById('networkPill').innerText = `${netName} · ${sessionData.network.chainId}`;
+
         // Render Plan Terms
-        document.getElementById('merchantAddressDisplay').innerText =
-          shortenAddress(sessionData.plan.merchantAddress);
-        document.getElementById('tokenAddressDisplay').innerText =
-          shortenAddress(sessionData.plan.tokenAddress);
+        const payout = sessionData.plan.payoutAddress || sessionData.plan.merchantAddress;
+        document.getElementById('merchantAddressDisplay').innerText = shorten(payout);
+        document.getElementById('merchantAddressDisplay').title = payout;
+
+        if (sessionData.plan.merchantName) {
+          document.getElementById('merchantNameDisplay').innerText = sessionData.plan.merchantName;
+        }
 
         const firstDue = new Date(sessionData.plan.firstDueTime * 1000);
         document.getElementById('firstDueDisplay').innerText = firstDue.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Start Countdown Timer
-        startSessionCountdown(sessionData.checkoutExpiresAt);
+        // Populate technical details
+        document.getElementById('cfgMandate').innerText = shorten(sessionData.network.smartMandateAddress);
+        document.getElementById('cfgMandate').title = sessionData.network.smartMandateAddress;
+        document.getElementById('cfgToken').innerText = shorten(sessionData.plan.tokenAddress);
+        document.getElementById('cfgToken').title = sessionData.plan.tokenAddress;
+        document.getElementById('cfgRequestId').innerText = sessionData.requestId;
 
-        // Auto-detect wallet if already authorized
+        // Auto-detect wallet if already connected
         if (window.ethereum) {
           provider = new ethers.BrowserProvider(window.ethereum);
           const accounts = await provider.listAccounts();
@@ -294,39 +540,15 @@
       }
     }
 
-    function shortenAddress(addr) {
-      if (!addr) return "";
-      return addr.slice(0, 6) + "..." + addr.slice(-4);
+    function shorten(addr) {
+      if (!addr || addr.length < 10) return addr;
+      return addr.slice(0, 6) + "…" + addr.slice(-4);
     }
 
-    function startSessionCountdown(expiresAt) {
-      if (timerInterval) clearInterval(timerInterval);
-      function tick() {
-        const now = Math.floor(Date.now() / 1000);
-        const rem = expiresAt - now;
-        if (rem <= 0) {
-          showExpired("Checkout link expired.");
-          clearInterval(timerInterval);
-          return;
-        }
-        const m = Math.floor(rem / 60);
-        const s = rem % 60;
-        document.getElementById('sessionCountdown').innerText =
-          `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      }
-      tick();
-      timerInterval = setInterval(tick, 1000);
-    }
-
-    function showExpired(msg) {
-      const box = document.getElementById('timerBox');
-      box.className = 'timer-alert expired';
-      box.innerHTML = `⚠️ <strong>${msg}</strong>`;
-      document.getElementById('connectWalletBtn').disabled = true;
-      if (document.getElementById('actionBtn')) {
-        document.getElementById('actionBtn').disabled = true;
-      }
-      showError(msg);
+    function copyCheckoutUrl() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showWarning("Checkout link copied to clipboard.");
+      });
     }
 
     function showError(msg) {
@@ -335,15 +557,30 @@
       b.style.display = 'block';
     }
 
-    function hideError() {
-      document.getElementById('errorBanner').style.display = 'none';
+    function showWarning(msg) {
+      const b = document.getElementById('warningBanner');
+      b.innerText = msg;
+      b.style.display = 'block';
+      setTimeout(() => { b.style.display = 'none'; }, 3000);
     }
 
-    // Connect Wallet (MetaMask / EIP-1193)
+    function hideError() {
+      document.getElementById('errorBanner').style.display = 'none';
+      document.getElementById('warningBanner').style.display = 'none';
+    }
+
+    function showExpired(msg) {
+      showError(msg);
+      document.getElementById('connectWalletBtn').disabled = true;
+      if (document.getElementById('actionBtn')) {
+        document.getElementById('actionBtn').disabled = true;
+      }
+    }
+
     async function connectWallet() {
       hideError();
       if (!window.ethereum) {
-        showError("No Web3 wallet detected. Please open this checkout page in MetaMask Mobile or a Web3-enabled browser.");
+        document.getElementById('noWalletNotice').style.display = 'block';
         return;
       }
 
@@ -363,30 +600,16 @@
               params: [{ chainId: '0x' + expectedChainId.toString(16) }]
             });
           } catch (switchError) {
-            // Add chain if missing
-            if (switchError.code === 4902) {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{
-                  chainId: '0x' + expectedChainId.toString(16),
-                  chainName: 'Hardhat Local Node',
-                  rpcUrls: [sessionData.network.lanRpcUrl || 'http://127.0.0.1:8545'],
-                  nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }
-                }]
-              });
-            } else {
-              showError("Please switch wallet network to Chain ID " + expectedChainId);
-              return;
-            }
+            showError("Please switch wallet network to Sepolia (Chain ID 11155111)");
+            return;
           }
         }
 
-        // Switch UI to Signing Flow
+        // Switch to Step 1 Signing Flow
         document.getElementById('connectWalletState').style.display = 'none';
         document.getElementById('signingFlowState').style.display = 'block';
-        document.getElementById('subscriberAddressDisplay').innerText = userAddress;
+        document.getElementById('subscriberAddressDisplay').innerText = shorten(userAddress);
 
-        // Refresh token balance & allowance
         await refreshSubscriberBalance();
       } catch (err) {
         console.error("Wallet connection error:", err);
@@ -408,48 +631,11 @@
         const bal = await tokenContract.balanceOf(userAddress);
         const formatted = ethers.formatUnits(bal, 18);
         document.getElementById('subscriberBalanceDisplay').innerText = `${parseFloat(formatted).toFixed(2)} DEMO`;
-
-        // If balance is below 15 DEMO, show faucet helper
-        const requiredAllowance = BigInt(sessionData.plan.allowanceCap);
-        if (bal < requiredAllowance) {
-          document.getElementById('faucetBtn').style.display = 'block';
-        } else {
-          document.getElementById('faucetBtn').style.display = 'none';
-        }
       } catch (e) {
-        console.warn("Could not read token balance:", e);
+        console.warn("Balance check error:", e);
       }
     }
 
-    // Local Testnet Faucet Mint Helper
-    async function mintTestTokens() {
-      hideError();
-      try {
-        const btn = document.getElementById('faucetBtn');
-        btn.innerText = "⏳ Minting 15 DEMO...";
-        btn.disabled = true;
-
-        const res = await fetch('/api/faucet', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ recipient: userAddress })
-        });
-        const d = await res.json();
-        if (d.success) {
-          btn.innerText = "✅ 15 DEMO Minted!";
-          await refreshSubscriberBalance();
-          setTimeout(() => { btn.style.display = 'none'; }, 2000);
-        } else {
-          showError("Faucet error: " + (d.error || "failed"));
-          btn.disabled = false;
-        }
-      } catch (e) {
-        showError("Faucet request failed: " + e.message);
-        document.getElementById('faucetBtn').disabled = false;
-      }
-    }
-
-    // Step Orchestrator
     async function handleCurrentStep() {
       hideError();
       if (currentStep === 1) {
@@ -461,11 +647,11 @@
       }
     }
 
-    // STEP 1: Sign EIP-712 Mandate
+    // Step 1: Sign EIP-712 Mandate
     async function executeStep1Sign() {
       const btn = document.getElementById('actionBtn');
       btn.disabled = true;
-      btn.innerText = "⏳ Requesting Signature in Wallet...";
+      btn.innerText = "Requesting signature…";
 
       try {
         const smartMandateContract = new ethers.Contract(
@@ -474,11 +660,9 @@
           provider
         );
 
-        // Fetch current on-chain nonce for subscriber
         const currentNonce = await smartMandateContract.currentNonce(userAddress);
         const nextNonce = currentNonce + 1n;
 
-        // Construct EIP-712 Typed Structured Data
         const domain = {
           name: "SmartMandateBilling",
           version: "1",
@@ -501,9 +685,10 @@
           ]
         };
 
+        const payoutAddr = sessionData.plan.payoutAddress || sessionData.plan.merchantAddress;
         signedMandateStruct = {
           subscriber: userAddress,
-          merchant: sessionData.plan.merchantAddress,
+          merchant: payoutAddr,
           token: sessionData.plan.tokenAddress,
           amount: BigInt(sessionData.plan.chargeAmount),
           interval: BigInt(sessionData.plan.interval),
@@ -514,11 +699,8 @@
           signingDeadline: BigInt(sessionData.plan.signingDeadline)
         };
 
-        // Sign using ethers v6 signTypedData
         signature = await signer.signTypedData(domain, types, signedMandateStruct);
-        console.log("EIP-712 Signature:", signature);
 
-        // Compute mandate ID matching Solidity keccak256(abi.encode(mandate))
         const coder = ethers.AbiCoder.defaultAbiCoder();
         const encoded = coder.encode(
           ["address", "address", "address", "uint256", "uint256", "uint256", "uint256", "uint256", "uint256", "uint256"],
@@ -537,18 +719,16 @@
         );
         mandateId = ethers.keccak256(encoded);
 
-        // Update Stepper to Step 2
-        document.getElementById('step1').className = 'step-item done';
-        document.getElementById('circle1').innerText = '✓';
-        document.getElementById('step2').className = 'step-item active';
+        // Advance to Step 2
         currentStep = 2;
-
+        document.getElementById('stepIndicatorLabel').innerHTML = `<span>Step 2 of 3</span> <span>Approve cap</span>`;
+        document.getElementById('stepHelpText').innerText = "Authorize the SmartMandate contract to pull up to 15 DEMO total across 3 periods.";
         btn.disabled = false;
-        btn.innerText = "💳 Step 2: Approve 15 DEMO Allowance";
+        btn.innerText = "Approve 15 DEMO";
       } catch (err) {
         console.error("Signing error:", err);
         btn.disabled = false;
-        btn.innerText = "✍️ Retry Step 1: Sign Mandate";
+        btn.innerText = "Sign authorization";
         if (err.code === 4001 || (err.message && err.message.includes("rejected"))) {
           showError("Signature request was rejected in wallet.");
         } else {
@@ -557,11 +737,11 @@
       }
     }
 
-    // STEP 2: Approve 15 DEMO Allowance
+    // Step 2: Approve 15 DEMO Allowance
     async function executeStep2Approve() {
       const btn = document.getElementById('actionBtn');
       btn.disabled = true;
-      btn.innerText = "⏳ Confirm Allowance in Wallet...";
+      btn.innerText = "Confirming in wallet…";
 
       try {
         const tokenContract = new ethers.Contract(
@@ -573,26 +753,22 @@
         const requiredAllowance = BigInt(sessionData.plan.allowanceCap);
         const currentAllowance = await tokenContract.allowance(userAddress, sessionData.network.smartMandateAddress);
 
-        if (currentAllowance >= requiredAllowance) {
-          console.log("Allowance already sufficient.");
-        } else {
+        if (currentAllowance < requiredAllowance) {
           const tx = await tokenContract.approve(sessionData.network.smartMandateAddress, requiredAllowance);
-          btn.innerText = "⏳ Waiting for on-chain confirmation...";
+          btn.innerText = "Mining approval on-chain…";
           await tx.wait();
         }
 
-        // Update Stepper to Step 3
-        document.getElementById('step2').className = 'step-item done';
-        document.getElementById('circle2').innerText = '✓';
-        document.getElementById('step3').className = 'step-item active';
+        // Advance to Step 3
         currentStep = 3;
-
+        document.getElementById('stepIndicatorLabel').innerHTML = `<span>Step 3 of 3</span> <span>Register subscription</span>`;
+        document.getElementById('stepHelpText').innerText = "Register your signed mandate on-chain to activate the recurring billing schedule.";
         btn.disabled = false;
-        btn.innerText = "🚀 Step 3: Register Mandate On-Chain";
+        btn.innerText = "Register subscription";
       } catch (err) {
         console.error("Approval error:", err);
         btn.disabled = false;
-        btn.innerText = "💳 Retry Step 2: Approve Allowance";
+        btn.innerText = "Approve 15 DEMO";
         if (err.code === 4001) {
           showError("Approval transaction was rejected in wallet.");
         } else {
@@ -601,11 +777,11 @@
       }
     }
 
-    // STEP 3: Register Mandate on SmartMandate.sol
+    // Step 3: Register Mandate on SmartMandate.sol
     async function executeStep3Register() {
       const btn = document.getElementById('actionBtn');
       btn.disabled = true;
-      btn.innerText = "⏳ Submitting registerMandate on-chain...";
+      btn.innerText = "Submitting registration…";
 
       try {
         const smartMandateContract = new ethers.Contract(
@@ -615,30 +791,30 @@
         );
 
         const tx = await smartMandateContract.registerMandate(signedMandateStruct, signature);
-        btn.innerText = "⏳ Mining registration transaction...";
+        btn.innerText = "Confirming registration on-chain…";
         const receipt = await tx.wait();
 
-        // Verify MandateRegistered event
         const events = receipt.logs
           .map(l => { try { return smartMandateContract.interface.parseLog(l); } catch { return null; } })
           .filter(e => e && e.name === "MandateRegistered");
 
         if (events.length === 0) {
-          throw new Error("MandateRegistered event was not emitted.");
+          throw new Error("MandateRegistered event not emitted.");
         }
 
-        // Transition to Confirmed Active State
+        // Confirmed state
         document.getElementById('signingFlowState').style.display = 'none';
         document.getElementById('confirmedState').style.display = 'block';
-        document.getElementById('confirmedMandateIdDisplay').innerText = mandateId;
+        document.getElementById('confirmedMandateRow').style.display = 'flex';
+        document.getElementById('confirmedMandateIdDisplay').innerText = shorten(mandateId);
+        document.getElementById('confirmedMandateIdDisplay').title = mandateId;
         document.getElementById('manageSubBtn').href = `/subscriber?mandateId=${mandateId}`;
 
-        // Save active mandate in local storage for subscriber view
         localStorage.setItem("lastActiveMandateId", mandateId);
       } catch (err) {
         console.error("Registration error:", err);
         btn.disabled = false;
-        btn.innerText = "🚀 Retry Step 3: Register Mandate";
+        btn.innerText = "Register subscription";
         if (err.code === 4001) {
           showError("Registration transaction was rejected in wallet.");
         } else {
